@@ -5,10 +5,10 @@ import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.common.util.collection.CollectionUtils;
 import cn.iocoder.yudao.framework.env.core.context.EnvContextHolder;
 import cn.iocoder.yudao.framework.env.core.util.EnvUtils;
-import com.alibaba.cloud.nacos.balancer.NacosBalancer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.DefaultResponse;
 import org.springframework.cloud.client.loadbalancer.EmptyResponse;
@@ -77,7 +77,7 @@ public class EnvLoadBalancerClient implements ReactorServiceInstanceLoadBalancer
         // TODO 芋艿：https://juejin.cn/post/7056770721858469896 想通网段
 
         // 随机 + 权重获取实例列表 TODO 芋艿：目前直接使用 Nacos 提供的方法，如果替换注册中心，需要重新失败该方法
-        return new DefaultResponse(NacosBalancer.getHostByRandomWeight3(chooseInstances));
+        return new DefaultResponse(new DefaultServiceInstance());
     }
 
 }

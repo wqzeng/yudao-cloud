@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.system;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * 项目的启动类
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author 芋道源码
  */
+@EnableDiscoveryClient
 @SpringBootApplication
 public class SystemServerApplication {
 

@@ -4,15 +4,20 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.common.util.collection.CollectionUtils;
 import cn.iocoder.yudao.gateway.util.EnvUtils;
-import com.alibaba.cloud.nacos.balancer.NacosBalancer;
+import com.netflix.discovery.DiscoveryClient;
+import com.netflix.discovery.EurekaClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.*;
 import org.springframework.cloud.loadbalancer.core.NoopServiceInstanceListSupplier;
 import org.springframework.cloud.loadbalancer.core.ReactorServiceInstanceLoadBalancer;
 import org.springframework.cloud.loadbalancer.core.ServiceInstanceListSupplier;
+import org.springframework.cloud.netflix.eureka.CloudEurekaClient;
+import org.springframework.cloud.netflix.eureka.EurekaServiceInstance;
+import org.springframework.cloud.netflix.eureka.serviceregistry.EurekaRegistration;
 import org.springframework.http.HttpHeaders;
 import reactor.core.publisher.Mono;
 
@@ -62,7 +67,6 @@ public class GrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
             log.warn("[getInstanceResponse][serviceId({}) 服务实例列表为空]", serviceId);
             return new EmptyResponse();
         }
-
         // 筛选满足 version 条件的实例列表
         String version = headers.getFirst(VERSION);
         List<ServiceInstance> chooseInstances;
@@ -80,7 +84,9 @@ public class GrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
         chooseInstances = filterTagServiceInstances(chooseInstances, headers);
 
         // 随机 + 权重获取实例列表 TODO 芋艿：目前直接使用 Nacos 提供的方法，如果替换注册中心，需要重新失败该方法
-        return new DefaultResponse(NacosBalancer.getHostByRandomWeight3(chooseInstances));
+//        return new DefaultResponse(NacosBalancer.getHostByRandomWeight3(chooseInstances));
+//        TODO 未实现Eureka灰度
+        return new DefaultResponse(new DefaultServiceInstance());
     }
 
     /**

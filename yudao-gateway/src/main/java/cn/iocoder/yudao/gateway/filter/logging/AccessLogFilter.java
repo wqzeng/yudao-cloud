@@ -6,7 +6,6 @@ import cn.hutool.json.JSONUtil;
 import cn.iocoder.yudao.framework.common.util.json.JsonUtils;
 import cn.iocoder.yudao.gateway.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.gateway.util.WebFrameworkUtils;
-import com.alibaba.nacos.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -29,6 +28,7 @@ import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.HandlerStrategies;
@@ -189,7 +189,7 @@ public class AccessLogFilter implements GlobalFilter, Ordered {
 
                     // 获取响应类型，如果是 json 就打印
                     String originalResponseContentType = exchange.getAttribute(ServerWebExchangeUtils.ORIGINAL_RESPONSE_CONTENT_TYPE_ATTR);
-                    if (StringUtils.isNotBlank(originalResponseContentType)
+                    if (StringUtils.hasText(originalResponseContentType)
                             && originalResponseContentType.contains("application/json")) {
                         Flux<? extends DataBuffer> fluxBody = Flux.from(body);
                         return super.writeWith(fluxBody.buffer().map(dataBuffers -> {
